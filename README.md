@@ -32,7 +32,7 @@ Ambas visiones conviven en el mismo proyecto Laravel: el CRM utiliza Inertia.js 
 
 - **Three.js** — Motor 3D que potencia los juegos (p. ej. Runner3D).
 - **Vue 3 + Vite** — Framework y bundler del juego Runner3D, ejecutado como aplicación independiente.
-- **face-api.js** — Librería de detección de emociones que opera íntegramente en el navegador del usuario, sin enviar imágenes al servidor.
+- **face-api.js** — Librería de detección de emociones que opera íntegramente en el navegador del usuario, sin enviar imágenes al servidor. Detecta 7 expresiones faciales (`neutral`, `happy`, `sad`, `angry`, `surprised`, `disgusted`, `fearful`) cada 3 segundos usando la webcam, y envía únicamente la etiqueta de emoción dominante, su nivel de confianza y el segundo de juego en que ocurrió a `POST /api/emotions`.
 
 ### Microservicio (fase futura)
 
@@ -229,11 +229,24 @@ php artisan migrate --seed
 # 8. Compilar assets
 npm run build
 
-# 9. Iniciar servidor de desarrollo
+# 9. Iniciar servidor de desarrollo Laravel
 php artisan serve
+
+# 10. Iniciar Vite (assets React en caliente)
+npm run dev
 ```
 
-El servidor estará disponible en `http://127.0.0.1:8000` por defecto.
+El CRM estará disponible en `http://127.0.0.1:8000`.
+
+### Iniciar el juego Runner3D (en otra terminal)
+
+```bash
+cd ../Runner3D
+npm install
+npm run dev
+```
+
+Runner3D corre en `http://localhost:5174`. Asegúrate de que el juego en la base de datos tenga `location = http://localhost:5174`.
 
 ---
 
