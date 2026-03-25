@@ -16,12 +16,25 @@ export default function GameShow({ game, auth }) {
     const [modelsReady, setModelsReady]     = useState(false);
     const [camError, setCamError]           = useState(null);
     const [lastEmotion, setLastEmotion]     = useState(null);
+    const [gameStatus, setGameStatus]       = useState('checking'); // 'checking' | 'ok' | 'unreachable'
     const videoRef                          = useRef(null);
     const sessionIdRef                      = useRef(null);
     const intervalRef                       = useRef(null);
 
     // Mantener sessionIdRef sincronizado
     useEffect(() => { sessionIdRef.current = sessionId; }, [sessionId]);
+
+    // Comprobar si el juego está accesible antes de cargar el iframe
+    useEffect(() => {
+        if (!game.location) { setGameStatus('unreachable'); return; }
+
+        const controller = new AbortController();
+        fetch(game.location, { method: 'HEAD', mode: 'no-cors', signal: controller.signal })
+            .then(() => setGameStatus('ok'))
+            .catch(() => setGameStatus('unreachable'));
+
+        return () => controller.abort();
+    }, [game.location]);
 
     // 1. Iniciar sesión de juego
     useEffect(() => {
