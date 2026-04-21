@@ -8,9 +8,11 @@ export default function Chat({ messages: initialMessages }) {
     const [messages, setMessages] = useState(initialMessages);
     const [content, setContent] = useState('');
     const [sending, setSending] = useState(false);
+    const [error, setError] = useState(null);
     const bottomRef = useRef(null);
 
     useEffect(() => {
+        if (!window.Echo) return;
         const channel = window.Echo.channel('chat');
         channel.listen('MessageSend', (e) => {
             setMessages((prev) => [...prev, e.message]);
@@ -26,9 +28,12 @@ export default function Chat({ messages: initialMessages }) {
         e.preventDefault();
         if (!content.trim() || sending) return;
         setSending(true);
+        setError(null);
         try {
             await axios.post(route('messages.store'), { content });
             setContent('');
+        } catch {
+            setError('No se pudo enviar el mensaje. Inténtalo de nuevo.');
         } finally {
             setSending(false);
         }
@@ -86,6 +91,10 @@ export default function Chat({ messages: initialMessages }) {
                         })}
                         <div ref={bottomRef} />
                     </div>
+
+                    {error && (
+                        <p className="text-red-400 text-xs px-1">{error}</p>
+                    )}
 
                     {/* Formulario de envío */}
                     <form
