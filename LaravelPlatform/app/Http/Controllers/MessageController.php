@@ -22,8 +22,8 @@ class MessageController extends Controller
                 'content'    => $m->content,
                 'created_at' => $m->created_at->toISOString(),
                 'user'       => [
-                    'id'   => $m->user->id,
-                    'name' => $m->user->name,
+                    'id'   => $m->user?->id,
+                    'name' => $m->user?->name ?? 'Deleted user',
                 ],
             ]);
 
