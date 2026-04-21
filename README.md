@@ -199,8 +199,41 @@ El flujo completo de gestión de un juego es el siguiente:
 
 ## Instalación y puesta en marcha
 
+### Opción A — Docker (recomendado)
+
+Requiere Docker Desktop instalado y en ejecución.
+
 ```bash
-# 1. Clonar y entrar al directorio
+# Desde la raíz del repositorio
+docker compose up --build -d
+```
+
+Esto levanta tres servicios automáticamente:
+
+| Servicio | URL | Descripción |
+|---|---|---|
+| Laravel (app) | http://localhost:8000 | CRM + API REST |
+| Vite (assets) | http://localhost:5173 | HMR de React en desarrollo |
+| PostgreSQL (db) | localhost:5432 | Base de datos |
+
+Las migraciones y seeders se ejecutan solos al arrancar. Para parar: `docker compose down`.
+
+### Iniciar Runner3D (fuera de Docker, en otra terminal)
+
+```bash
+cd Runner3D
+npm install
+npm run dev
+```
+
+Runner3D corre en `http://localhost:5174`. El seeder ya configura los juegos de prueba con esta URL.
+
+---
+
+### Opción B — Instalación manual
+
+```bash
+# 1. Entrar al directorio
 cd LaravelPlatform
 
 # 2. Instalar dependencias PHP
@@ -216,9 +249,9 @@ cp .env.example .env
 #    DB_CONNECTION=pgsql
 #    DB_HOST=127.0.0.1
 #    DB_PORT=5432
-#    DB_DATABASE=nombre_de_la_base_de_datos
-#    DB_USERNAME=usuario_postgres
-#    DB_PASSWORD=contraseña_postgres
+#    DB_DATABASE=gameplatform
+#    DB_USERNAME=postgres
+#    DB_PASSWORD=Password123
 
 # 6. Generar clave de aplicación
 php artisan key:generate
@@ -226,19 +259,16 @@ php artisan key:generate
 # 7. Ejecutar migraciones y seeders
 php artisan migrate --seed
 
-# 8. Compilar assets
-npm run build
-
-# 9. Iniciar servidor de desarrollo Laravel
+# 8. Iniciar servidor de desarrollo Laravel
 php artisan serve
 
-# 10. Iniciar Vite (assets React en caliente)
+# 9. Iniciar Vite (assets React en caliente)
 npm run dev
 ```
 
 El CRM estará disponible en `http://127.0.0.1:8000`.
 
-### Iniciar el juego Runner3D (en otra terminal)
+### Iniciar Runner3D (en otra terminal)
 
 ```bash
 cd ../Runner3D

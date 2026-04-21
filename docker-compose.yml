@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gameplatform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ./LaravelPlatform
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: gameplatform
+      DB_USERNAME: postgres
+      DB_PASSWORD: Password123
+      APP_URL: http://localhost:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./LaravelPlatform:/var/www
+      - ./LaravelPlatform/.env.docker:/var/www/.env
+      - /var/www/vendor
+      - /var/www/node_modules
+
+  vite:
+    image: node:20-slim
+    working_dir: /var/www
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install --legacy-peer-deps && npm run dev -- --host"
+    volumes:
+      - ./LaravelPlatform:/var/www
+    depends_on:
+      - app
+
+volumes:
+  pgdata:

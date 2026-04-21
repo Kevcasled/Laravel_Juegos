@@ -14,7 +14,7 @@ class GameController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/Games/Index', [
-            'games' => Game::with('creator')->latest()->paginate(20),
+            'games' => Game::with('creator')->latest()->get(),
         ]);
     }
 

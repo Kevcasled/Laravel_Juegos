@@ -48,7 +48,7 @@ class RoleSeeder extends Seeder
             [
                 'description'  => 'Juego Runner3D en modo publicado.',
                 'is_published' => true,
-                'location'     => 'http://localhost:5173',
+                'location'     => 'http://localhost:5174',
                 'user_id'      => $gestor->id,
             ]
         );
@@ -58,7 +58,7 @@ class RoleSeeder extends Seeder
             [
                 'description'  => 'Juego Runner3D en modo borrador.',
                 'is_published' => false,
-                'location'     => 'http://localhost:5173',
+                'location'     => 'http://localhost:5174',
                 'user_id'      => $gestor->id,
             ]
         );
