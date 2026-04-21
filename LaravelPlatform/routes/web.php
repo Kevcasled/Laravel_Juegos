@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\GameController as AdminGameController;
 use App\Http\Controllers\Player\GameController as PlayerGameController;
@@ -18,6 +19,9 @@ require __DIR__.'/auth.php';
 // Dashboard — protegido, redirige según rol
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 
     // Admin y Gestor — CRM de juegos
     Route::middleware('role:admin,gestor')->prefix('admin')->name('admin.')->group(function () {
