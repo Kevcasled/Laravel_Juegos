@@ -43,6 +43,13 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             {/* Desktop nav links por rol */}
                             <div className="hidden space-x-1 sm:-my-px sm:ms-8 sm:flex sm:items-center">
+                                <NavLink
+                                    href={route('chat.index')}
+                                    active={route().current('chat.index')}
+                                    className="text-gray-300 hover:text-white"
+                                >
+                                    Chat
+                                </NavLink>
                                 {isAdminOrGestor ? (
                                     <>
                                         <NavLink
@@ -163,6 +170,9 @@ export default function AuthenticatedLayout({ header, children }) {
                 {/* Mobile menu */}
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink href={route('chat.index')} active={route().current('chat.index')}>
+                            Chat
+                        </ResponsiveNavLink>
                         {isAdminOrGestor ? (
                             <>
                                 <ResponsiveNavLink href="/dashboard" active={route().current('dashboard')}>
