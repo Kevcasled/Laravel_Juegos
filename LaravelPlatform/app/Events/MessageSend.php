@@ -24,18 +24,16 @@ class MessageSend implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        // SerializesModels rehidrata el modelo pero no las relaciones.
-        // loadMissing garantiza que user esté disponible al serializar.
-        $this->message->loadMissing('user');
+        $message = $this->message->loadMissing('user');
 
         return [
             'message' => [
-                'id'         => $this->message->id,
-                'content'    => $this->message->content,
-                'created_at' => $this->message->created_at->toISOString(),
+                'id'         => $message->id,
+                'content'    => $message->content,
+                'created_at' => $message->created_at->toISOString(),
                 'user'       => [
-                    'id'   => $this->message->user->id,
-                    'name' => $this->message->user->name,
+                    'id'   => $message->user?->id,
+                    'name' => $message->user?->name ?? 'Deleted user',
                 ],
             ],
         ];
