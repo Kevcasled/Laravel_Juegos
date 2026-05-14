@@ -241,6 +241,7 @@ export function useThreeGame(canvasRef) {
       best.value = score.value;
       localStorage.setItem("bestScore", String(best.value));
     }
+    window.parent.postMessage({ type: 'GAME_OVER', score: score.value }, '*');
   }
 
   function updateScore(dt) {

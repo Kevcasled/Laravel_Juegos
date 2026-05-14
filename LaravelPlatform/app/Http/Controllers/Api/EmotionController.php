@@ -17,7 +17,7 @@ class EmotionController extends Controller
     {
         $validated = $request->validate([
             'session_id'      => ['required', 'integer', 'exists:game_sessions,id'],
-            'emotion'         => ['required', 'string', 'in:neutral,happy,sad,angry,surprised'],
+            'emotion'         => ['required', 'string', 'in:neutral,happy,sad,angry,surprised,disgusted,fearful'],
             'confidence'      => ['required', 'numeric', 'min:0', 'max:1'],
             'elapsed_seconds' => ['required', 'integer', 'min:0'],
         ]);

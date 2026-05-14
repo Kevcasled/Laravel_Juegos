@@ -38,10 +38,20 @@ class MessageController extends Controller
 
         $message = auth()->user()->messages()->create([
             'content' => $validated['content'],
-        ]);
+        ])->load('user');
 
         MessageSend::dispatch($message);
 
-        return response()->json(['ok' => true]);
+        return response()->json([
+            'message' => [
+                'id'         => $message->id,
+                'content'    => $message->content,
+                'created_at' => $message->created_at->toISOString(),
+                'user'       => [
+                    'id'   => $message->user?->id,
+                    'name' => $message->user?->name ?? 'Deleted user',
+                ],
+            ],
+        ]);
     }
 }

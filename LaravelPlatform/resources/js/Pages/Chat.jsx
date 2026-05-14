@@ -15,7 +15,13 @@ export default function Chat({ messages: initialMessages }) {
         if (!window.Echo) return;
         const channel = window.Echo.channel('chat');
         channel.listen('MessageSend', (e) => {
-            setMessages((prev) => [...prev, e.message]);
+            setMessages((prev) => {
+                if (prev.some((message) => message.id === e.message.id)) {
+                    return prev;
+                }
+
+                return [...prev, e.message];
+            });
         });
         return () => window.Echo.leaveChannel('chat');
     }, []);

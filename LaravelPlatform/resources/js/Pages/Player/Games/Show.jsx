@@ -12,7 +12,7 @@ function getCookie(name) {
 // Props: game { id, title, description, location }, auth { user }
 export default function GameShow({ game, auth }) {
     const [sessionId, setSessionId]         = useState(null);
-    const [score]                           = useState(0);
+    const [score, setScore]                 = useState(0);
     const [modelsReady, setModelsReady]     = useState(false);
     const [camError, setCamError]           = useState(null);
     const [lastEmotion, setLastEmotion]     = useState(null);
@@ -23,6 +23,17 @@ export default function GameShow({ game, auth }) {
 
     // Mantener sessionIdRef sincronizado
     useEffect(() => { sessionIdRef.current = sessionId; }, [sessionId]);
+
+    // Recibir score desde Runner3D via postMessage
+    useEffect(() => {
+        const handler = (e) => {
+            if (e.data?.type === 'GAME_OVER' && typeof e.data.score === 'number') {
+                setScore(e.data.score);
+            }
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
 
     // Comprobar si el juego está accesible antes de cargar el iframe
     useEffect(() => {
@@ -153,7 +164,7 @@ export default function GameShow({ game, auth }) {
                 {/* Header */}
                 <header className="flex items-center justify-between border-b border-gray-800 bg-gray-900 px-4 py-3 sm:px-6">
                     <div className="flex items-center gap-3">
-                        <Link href="/games" className="flex items-center gap-1.5 text-sm text-gray-400 transition hover:text-white">
+                        <Link href={route('player.games.index')} className="flex items-center gap-1.5 text-sm text-gray-400 transition hover:text-white">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
